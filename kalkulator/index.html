@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kalkulator Pintar Lengkap</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="container">
+
+  <!-- BRAND -->
+  <div class="brand-label">KALKULATOR</div>
+  <div class="brand-name">Adit pintar</div>
+
+  <!-- TOP INPUT: ketik ekspresi matematika -->
+  <div class="top-input-row">
+    <input type="text" id="math-input" placeholder="Ketik kalimat matematika..."/>
+    <button class="btn-hitung" onclick="hitungKalimat()">Hitung</button>
+  </div>
+
+  <!-- DISPLAY -->
+  <div class="display">
+    <div class="expr"   id="expr"></div>
+    <div class="result" id="result">0</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="calc"     onclick="switchTab('calc')">Kalkulator</button>
+    <button class="tab-btn"        data-tab="currency" onclick="switchTab('currency')">CUR</button>
+    <button class="tab-btn"        data-tab="unit"     onclick="switchTab('unit')">UNIT</button>
+    <button class="tab-btn"        data-tab="soal"     onclick="switchTab('soal')">Soal Cerita</button>
+  </div>
+
+  <!-- ============================= -->
+  <!--  PANEL 1 : KALKULATOR         -->
+  <!-- ============================= -->
+  <div id="calc-panel">
+
+    <!-- Trig row -->
+    <div class="trig-row">
+      <button class="btn btn-func" onclick="inputFunc('sin')">sin</button>
+      <button class="btn btn-func" onclick="inputFunc('cos')">cos</button>
+      <button class="btn btn-func" onclick="inputFunc('tan')">tan</button>
+      <button class="btn btn-func" onclick="inputOp('%')">%</button>
+    </div>
+
+    <!-- Main grid -->
+    <div class="btn-grid">
+
+      <!-- Row 1 : AC  C  ⌫  CUR -->
+      <button class="btn btn-ac"   onclick="clearAll()">AC</button>
+      <button class="btn btn-c"    onclick="clearOne()">C</button>
+      <button class="btn btn-back" onclick="backspace()">⌫</button>
+      <button class="btn btn-cur"  onclick="switchTab('currency')">CUR</button>
+
+      <!-- Row 2 : 7  8  9  × -->
+      <button class="btn btn-light" onclick="inputNum('7')">7</button>
+      <button class="btn btn-light" onclick="inputNum('8')">8</button>
+      <button class="btn btn-light" onclick="inputNum('9')">9</button>
+      <button class="btn btn-op"    onclick="inputOp('×')">×</button>
+
+      <!-- Row 3 : 4  5  6  ÷ -->
+      <button class="btn btn-light" onclick="inputNum('4')">4</button>
+      <button class="btn btn-light" onclick="inputNum('5')">5</button>
+      <button class="btn btn-light" onclick="inputNum('6')">6</button>
+      <button class="btn btn-op"    onclick="inputOp('÷')">÷</button>
+
+      <!-- Row 4 : 1  2  3  − -->
+      <button class="btn btn-light" onclick="inputNum('1')">1</button>
+      <button class="btn btn-light" onclick="inputNum('2')">2</button>
+      <button class="btn btn-light" onclick="inputNum('3')">3</button>
+      <button class="btn btn-op"    onclick="inputOp('−')">−</button>
+
+      <!-- Row 5 : +/-  0  .  UNIT  = -->
+      <button class="btn btn-light" onclick="toggleSign()">+/−</button>
+      <button class="btn btn-light" onclick="inputNum('0')">0</button>
+      <button class="btn btn-light" onclick="inputDot()">.</button>
+      <button class="btn btn-unit"  onclick="switchTab('unit')">UNIT</button>
+      <button class="btn btn-eq"    onclick="calculate()" style="grid-column: span 4; border-radius: 50px; aspect-ratio: unset; height: 52px;">=</button>
+
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!--  PANEL 2 : CURRENCY           -->
+  <!-- ============================= -->
+  <div id="currency-panel" style="display:none;">
+    <div class="panel-box">
+      <label>Jumlah</label>
+      <input type="number" id="cur-amount" placeholder="Masukkan jumlah..." />
+
+      <label>Dari → Ke</label>
+      <div class="convert-row">
+        <select id="cur-from">
+          <option value="IDR">IDR – Rupiah</option>
+          <option value="USD">USD – US Dollar</option>
+          <option value="EUR">EUR – Euro</option>
+          <option value="GBP">GBP – Poundsterling</option>
+          <option value="JPY">JPY – Yen Jepang</option>
+          <option value="SGD">SGD – Dollar Singapura</option>
+          <option value="MYR">MYR – Ringgit Malaysia</option>
+          <option value="AUD">AUD – Dollar Australia</option>
+          <option value="CNY">CNY – Yuan China</option>
+          <option value="KRW">KRW – Won Korea</option>
+        </select>
+        <span class="convert-arrow">→</span>
+        <select id="cur-to">
+          <option value="USD">USD – US Dollar</option>
+          <option value="IDR">IDR – Rupiah</option>
+          <option value="EUR">EUR – Euro</option>
+          <option value="GBP">GBP – Poundsterling</option>
+          <option value="JPY">JPY – Yen Jepang</option>
+          <option value="SGD">SGD – Dollar Singapura</option>
+          <option value="MYR">MYR – Ringgit Malaysia</option>
+          <option value="AUD">AUD – Dollar Australia</option>
+          <option value="CNY">CNY – Yuan China</option>
+          <option value="KRW">KRW – Won Korea</option>
+        </select>
+      </div>
+
+      <button class="action-btn" onclick="convertCurrency()">💱 Konversi Mata Uang</button>
+      <div class="panel-result" id="cur-result"></div>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!--  PANEL 3 : UNIT               -->
+  <!-- ============================= -->
+  <div id="unit-panel" style="display:none;">
+    <div class="panel-box">
+      <label>Kategori</label>
+      <select id="unit-cat" onchange="onUnitCategoryChange()">
+        <option>Panjang</option>
+        <option>Berat</option>
+        <option>Suhu</option>
+        <option>Luas</option>
+      </select>
+
+      <label>Jumlah</label>
+      <input type="number" id="unit-amount" placeholder="Masukkan nilai..."/>
+
+      <label>Dari → Ke</label>
+      <div class="convert-row">
+        <select id="unit-from" style="flex:1"></select>
+        <span class="convert-arrow">→</span>
+        <select id="unit-to" style="flex:1"></select>
+      </div>
+
+      <button class="action-btn" onclick="convertUnit()">📏 Konversi Satuan</button>
+      <div class="panel-result" id="unit-result"></div>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!--  PANEL 4 : SOAL CERITA        -->
+  <!-- ============================= -->
+  <div id="soal-panel" style="display:none;">
+    <div class="soal-wrap">
+      <label>Pilih Operasi:</label>
+      <div class="soal-type-row">
+        <button class="soal-type-btn selected" onclick="selectType(this,'penjumlahan')">Penjumlahan</button>
+        <button class="soal-type-btn"          onclick="selectType(this,'pengurangan')">Pengurangan</button>
+        <button class="soal-type-btn"          onclick="selectType(this,'perkalian')">Perkalian</button>
+        <button class="soal-type-btn"          onclick="selectType(this,'pembagian')">Pembagian</button>
+      </div>
+
+      <label>Tulis Soal Cerita:</label>
+      <textarea id="soal-input"
+        placeholder="Contoh: Budi punya 24 kelereng, diberi 18 lagi. Berapa total kelereng Budi?"></textarea>
+
+      <button class="action-btn" onclick="solveSoal()">✦ Selesaikan Soal</button>
+
+      <div class="soal-result" id="soal-result">
+        <div class="res-label">Jawaban:</div>
+        <div class="res-val"  id="res-val"></div>
+        <div class="res-step" id="res-step"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM ASISTEN ROW -->
+  <div class="bottom-row">
+    <input type="text" id="asisten-input" placeholder="Tanya sesuatu... (contoh: cara pakai sin)"/>
+    <button class="btn-asisten" onclick="tanyaAsisten()">Tanya<br/>Asisten</button>
+  </div>
+  <div class="asisten-result" id="asisten-result"></div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
